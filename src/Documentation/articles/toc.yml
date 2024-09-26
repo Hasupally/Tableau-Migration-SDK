@@ -1,0 +1,24 @@
+- name: Configuration
+  href: configuration.md  
+- name: Plan Validation
+  href: plan_validation.md
+- name: Logging
+  href: logging.md
+- name: Hooks
+  href: hooks/index.md  
+  items:
+  - name: Custom Hooks
+    href: hooks/custom_hooks.md  
+  - name: Example Hook Use Cases
+    href: hooks/example_hook_use_cases.md
+  - name: Python Hook Update from v3 to v4+
+    href: hooks/python_hook_update.md
+- name: User Authentication
+  href: user_authentication.md
+- name: Custom View File
+  href: cv_file.md  
+- name: Dependency Injection
+  href: dependency_injection.md
+- name: Troubleshooting
+  href: troubleshooting.md
+

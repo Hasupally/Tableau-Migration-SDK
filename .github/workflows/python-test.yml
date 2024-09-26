@@ -1,0 +1,42 @@
+name: Python Test
+
+on:
+  workflow_call:
+
+env:
+  MIG_SDK_PYTHON_BUILD: ${{ vars.MIG_SDK_PYTHON_BUILD }}
+
+defaults:
+  run:
+    working-directory: ./src/Python
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(vars.BUILD_OS) }}
+        config: ${{ fromJSON(vars.BUILD_CONFIGURATIONS) }}
+    runs-on: ${{ matrix.os }}
+    name: Test on ${{ matrix.os }}, ${{ matrix.config }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-dotnet
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ vars.PYTHON_TEST_VERSIONS }}
+          cache: 'pip' # caching pip dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install hatch
+      - uses: actions/download-artifact@v4
+        with:
+          name: tests-published-${{ matrix.config }}
+          path: ./src/Python/src/tableau_migration/bin/
+      - name: Lint with ruff
+        run: python -m hatch run lint:lint
+          
+      - name: Test with pytest
+        run: |
+          python -m hatch --data-dir=.hatch --cache-dir=.hatch_cache run test:testcov
